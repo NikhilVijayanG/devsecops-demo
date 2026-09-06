@@ -137,6 +137,8 @@ jobs:
           load: true
           tags: ${{ env.SCAN_IMAGE }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BUILD_REV=${{ github.run_id }}-${{ github.run_attempt }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -176,6 +178,10 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          # Must match the scan build exactly, so what gets pushed is the image
+          # that was actually scanned above (served from the gha cache).
+          build-args: |
+            BUILD_REV=${{ github.run_id }}-${{ github.run_attempt }}
           cache-from: type=gha
 
       - name: Set image tag output
