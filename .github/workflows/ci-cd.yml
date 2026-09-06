@@ -164,10 +164,10 @@ jobs:
         env:
           IMAGE_TAG: sha-${{ github.sha }}
           IMAGE_NAME: nikhilvijayang/devsecops-demo
-	  REGISTRY: ghcr.io
+          REGISTRY: ghcr.io
         run: |
           # Define the new image with tag
-          NEW_IMAGE="${REGISTRY}/${GITHUB_REPOSITORY}:${IMAGE_TAG}"
+          NEW_IMAGE="${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
           
           # Update the deployment file directly
           sed -i "s|image: ${REGISTRY}/.*|image: ${NEW_IMAGE}|g" kubernetes/deployment.yaml
