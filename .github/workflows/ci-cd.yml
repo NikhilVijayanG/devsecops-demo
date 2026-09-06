@@ -79,9 +79,7 @@ jobs:
     needs: [build]
     env:
       REGISTRY: ghcr.io
-      #IMAGE_NAME: ${{ github.repository }}
- IMAGE_NAME: ${{ github.repository }}
-#IMAGE_NAME: nikhilvijayang/devsecops-demo
+      IMAGE_NAME: nikhilvijayang/devsecops-demo
 
     outputs:
       image_tag: ${{ steps.set_output.outputs.image_tag }}
@@ -165,8 +163,8 @@ jobs:
       - name: Update Kubernetes deployment file
         env:
           IMAGE_TAG: sha-${{ github.sha }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          REGISTRY: ghcr.io
+          IMAGE_NAME: nikhilvijayang/devsecops-demo
+	  REGISTRY: ghcr.io
         run: |
           # Define the new image with tag
           NEW_IMAGE="${REGISTRY}/${GITHUB_REPOSITORY}:${IMAGE_TAG}"
