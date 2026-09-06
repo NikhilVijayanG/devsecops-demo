@@ -27,7 +27,24 @@ The "Update Kubernetes Deployment" stage:
 
 The workflow requires the following GitHub secrets:
 
-- `GITHUB_TOKEN` - Automatically provided by GitHub Actions, used for pushing to the repository and the container registry
+- `TOKEN` - A Personal Access Token with `write:packages` (push to GHCR) and `repo`
+  (commit the updated Kubernetes manifest back to the repository) scopes. The
+  built-in `GITHUB_TOKEN` is not used here because a push made with it does not
+  re-trigger workflows.
+
+## Image Scanning
+
+The image is built locally (`load: true`, not pushed) and scanned with Trivy
+before it is published, so a vulnerable image never reaches the registry. The
+scan runs as two steps:
+
+1. **Trivy vulnerability report** - always prints the findings table, never fails.
+2. **Fail on CRITICAL,HIGH vulnerabilities** - the gate; fails the job if
+   fixable `CRITICAL`/`HIGH` issues are present.
+
+If the gate fails, the table printed by step 1 lists the exact CVEs. Adjust the
+threshold via the `SEVERITY` variable in the `docker` job, or add accepted CVEs
+to a `.trivyignore` file at the repository root.
 
 ## Continuous Deployment
 
