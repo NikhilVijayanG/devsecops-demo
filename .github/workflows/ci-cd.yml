@@ -116,7 +116,11 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.TOKEN }}
+          # GITHUB_TOKEN, not the PAT: the `packages: write` permission declared
+          # on this job scopes it for GHCR automatically. A classic PAT would
+          # need write:packages, and a fine-grained PAT cannot push to GHCR at
+          # all -- either way it authenticates but is denied at push time.
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata for Docker
         id: meta

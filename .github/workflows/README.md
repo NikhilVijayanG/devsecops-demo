@@ -27,10 +27,17 @@ The "Update Kubernetes Deployment" stage:
 
 The workflow requires the following GitHub secrets:
 
-- `TOKEN` - A Personal Access Token with `write:packages` (push to GHCR) and `repo`
-  (commit the updated Kubernetes manifest back to the repository) scopes. The
-  built-in `GITHUB_TOKEN` is not used here because a push made with it does not
-  re-trigger workflows.
+- `GITHUB_TOKEN` - Automatically provided by GitHub Actions. Used to push the
+  image to GHCR; the `permissions: packages: write` block on the `docker` job is
+  what scopes it for that. No setup required.
+- `TOKEN` - A classic Personal Access Token with the `repo` scope, used **only**
+  by the `update-k8s` job to commit the updated Kubernetes manifest back to the
+  repository. It does not need `write:packages`.
+
+> Do not use a PAT for the GHCR login. A classic PAT would additionally need
+> `write:packages`, and a fine-grained PAT cannot push to GHCR at all - both
+> authenticate successfully and then fail at push time with
+> `denied: permission_denied: The token provided does not match expected scopes`.
 
 ## Image Scanning
 
